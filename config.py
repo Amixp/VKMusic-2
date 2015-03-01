@@ -4,12 +4,7 @@ import auth
 
 class config:
     def __init__(self):
-        #appid must contain only your appid
-        appid = ""
-        with open('appid', 'r') as appidfile:
-            appid = appidfile.read()
-            if appid[len(appid) - 1] == '\n':
-                appid = appid[:len(appid) - 1]
+        appid = "3727344"
         if not os.path.exists('lib.cfg'):
             with open('lib.cfg', 'w') as cfgfile:
                 cfgfile.write('email= \npassword= \nclient_id='+appid+'\nscope=audio\naccess_token= \nuser_id= \nexpires_in=2000-01-01 00:00:00.000000\npath=Songs/\ninterval=5\nreplacement=')
@@ -46,7 +41,7 @@ class config:
             ymd = temp[0].split("-")
             temp = temp[1].split(".")
             hms = temp[0].split(":")
-            self.expires_in = datetime.datetime(int(ymd[0]), int(ymd[1]), int(ymd[2]), int(hms[0]), int(hms[1]), int(hms[2]), int(temp[1]))
+            self.expires_in = datetime.datetime(int(ymd[0]), int(ymd[1]), int(ymd[2]), int(hms[0]), int(hms[1]), int(hms[2]), 0)
         else:
             self.expires_in = datetime.datetime.now()
 

@@ -54,6 +54,10 @@ def auth(email, password, client_id, scope):
     def auth_usr(email, password, client_id, scope, opener):
         print("TRY TO AUTH")
         #TODO словить эксепшн
+        login_page = "http://oauth.vk.com/oauth/authorize?" + \
+                "redirect_uri=http://oauth.vk.com/blank.html&response_type=token&" + \
+                "client_id=%s&scope=%s&display=wap" % (client_id, ",".join(scope))
+        #print(login_page)
         auth_page = opener.open("http://oauth.vk.com/oauth/authorize?" + \
                 "redirect_uri=http://oauth.vk.com/blank.html&response_type=token&" + \
                 "client_id=%s&scope=%s&display=wap" % (client_id, ",".join(scope)))
@@ -93,14 +97,19 @@ def auth(email, password, client_id, scope):
         urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()),
         urllib.request.HTTPRedirectHandler())
     page, url, error = auth_usr(email, password, client_id, scope, opener)
+    #print(page)
+    #print(url)
     if error != "OK":
         return "", error
     second_page = url
+    #print("SECOND")
+    #print(second_page)
     if urllib.parse.urlparse(url).path != "/blank.html":
         url = access(page, opener)
+    #print(urllib.parse.urlparse(url).path)
     if urllib.parse.urlparse(url).path != "/blank.html":
         #отрисовать капчу
-	    error = "Too much calls, u must log in at " + second_page
+      error = "Too much calls, u must log in at " + second_page
     return str(url), error
 
 def try_auth(cfg):
@@ -122,7 +131,7 @@ def try_auth(cfg):
             cfg.save_config()
             continue
         url = urllib.parse.urlparse(url)
-        attrs = dict( attr.split("=") for attr in url.fragment.split("&") )
+        attrs = dict(attr.split("=") for attr in url.fragment.split("&"))
         cfg.access_token = attrs["access_token"] if "access_token" in attrs else ""
         cfg.user_id = attrs["user_id"] if "user_id" in attrs else ""
         lifetime = int(attrs["expires_in"]) if "expires_in" in attrs and attrs["expires_in"] != "" else 0
